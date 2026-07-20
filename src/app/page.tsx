@@ -14,13 +14,27 @@ import {
 import { client } from "@/lib/sanity";
 
 // --- Tipe Data ---
+interface BerandaData {
+  heroTitle: string;
+  heroSubtitle: string;
+  heroImageUrl: string;
+  tentangImage1Url: string;
+  tentangImage2Url: string;
+}
+
 interface Berita {
   _id: string;
   judul: string;
   tanggal: string;
 }
 
-// --- Data Statis ---
+interface Galeri {
+  _id: string;
+  judul: string;
+  gambarUrl: string;
+}
+
+// --- Data Statis Layanan & Potensi ---
 const layanan = [
   {
     icon: ShieldCheck,
@@ -58,25 +72,51 @@ const potensi = [
 ];
 
 export default async function Home() {
-  const query =
+  // Query GROQ dengan trik "->url" untuk langsung mengambil link gambar murni dari Sanity
+  const berandaQuery = `*[_type == "beranda"][0] { 
+    heroTitle, 
+    heroSubtitle, 
+    "heroImageUrl": heroImage.asset->url, 
+    "tentangImage1Url": tentangImage1.asset->url, 
+    "tentangImage2Url": tentangImage2.asset->url 
+  }`;
+
+  const beritaQuery =
     '*[_type == "berita"] | order(tanggal desc)[0...3] { _id, judul, tanggal }';
-  const beritaTerbaru = await client.fetch<Berita[]>(query);
+
+  const galeriQuery =
+    '*[_type == "galeri"] | order(_createdAt desc)[0...4] { _id, judul, "gambarUrl": gambar.asset->url }';
+
+  // Menarik semua data secara bersamaan agar lebih cepat
+  const [beranda, beritaTerbaru, galeriData] = await Promise.all([
+    client.fetch<BerandaData>(berandaQuery),
+    client.fetch<Berita[]>(beritaQuery),
+    client.fetch<Galeri[]>(galeriQuery),
+  ]);
 
   return (
     <>
-      {/* 1. HERO SECTION */}
-      <section className="relative bg-sage-800 text-sage-50 py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1596404988457-377038e1e793?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
-        <div className="relative max-w-7xl mx-auto px-6 text-center">
+      {/* 1. HERO SECTION (Dinamis dari Sanity) */}
+      <section
+        className="relative bg-sage-900 text-sage-50 py-32 overflow-hidden flex items-center min-h-[80vh]"
+        style={{
+          backgroundImage: beranda?.heroImageUrl
+            ? `linear-gradient(rgba(36, 51, 29, 0.75), rgba(36, 51, 29, 0.85)), url(${beranda.heroImageUrl})`
+            : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="relative max-w-7xl mx-auto px-6 text-center w-full">
           <span className="inline-block py-1 px-3 rounded-full bg-gold-500/20 text-gold-400 text-sm font-medium border border-gold-500/30 mb-6">
             Selamat Datang di Portal Resmi
           </span>
           <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 text-white drop-shadow-lg">
-            Desa Kadungrejo
+            {beranda?.heroTitle || "Desa Kadungrejo"}
           </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-sage-200 mb-10">
-            Harmoni antara tradisi lokal dan inovasi digital. Menuju desa
-            mandiri, transparan, dan sejahtera untuk seluruh warga.
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-sage-200 mb-10 drop-shadow-md">
+            {beranda?.heroSubtitle ||
+              "Harmoni antara tradisi lokal dan inovasi digital menuju desa mandiri."}
           </p>
           <div className="flex justify-center gap-4">
             <Link
@@ -87,7 +127,7 @@ export default async function Home() {
             </Link>
             <Link
               href="/profil"
-              className="bg-sage-700 hover:bg-sage-600 text-white font-bold py-3 px-6 rounded-lg border border-sage-500 transition-colors"
+              className="bg-sage-700/80 backdrop-blur-sm hover:bg-sage-600 text-white font-bold py-3 px-6 rounded-lg border border-sage-500 transition-colors"
             >
               Kenali Desa
             </Link>
@@ -95,7 +135,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 2. SEKILAS TENTANG DESA */}
+      {/* 2. SEKILAS TENTANG DESA (Dinamis dari Sanity) */}
       <section className="py-24 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-sage-900 mb-6">
@@ -104,8 +144,7 @@ export default async function Home() {
           <p className="text-sage-700 leading-relaxed mb-4">
             Desa Kadungrejo adalah desa agraris yang menjunjung tinggi semangat
             gotong royong. Dengan potensi alam yang melimpah dan SDM yang terus
-            berkembang, kami berkomitmen menjadi desa percontohan di tingkat
-            kabupaten.
+            berkembang, kami berkomitmen menjadi desa percontohan.
           </p>
           <p className="text-sage-700 leading-relaxed mb-8">
             Portal ini hadir sebagai jembatan komunikasi antara pemerintah desa
@@ -121,10 +160,29 @@ export default async function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-sage-200 h-48 rounded-2xl"></div>{" "}
-          {/* Placeholder Gambar */}
-          <div className="bg-sage-300 h-48 rounded-2xl mt-8"></div>{" "}
-          {/* Placeholder Gambar */}
+          {beranda?.tentangImage1Url ? (
+            <img
+              src={beranda.tentangImage1Url}
+              alt="Foto Desa 1"
+              className="h-56 w-full object-cover rounded-2xl shadow-sm"
+            />
+          ) : (
+            <div className="bg-sage-200 h-56 rounded-2xl flex items-center justify-center text-sage-500 text-sm">
+              Belum ada foto 1
+            </div>
+          )}
+
+          {beranda?.tentangImage2Url ? (
+            <img
+              src={beranda.tentangImage2Url}
+              alt="Foto Desa 2"
+              className="h-56 w-full object-cover rounded-2xl shadow-sm mt-8"
+            />
+          ) : (
+            <div className="bg-sage-300 h-56 rounded-2xl mt-8 flex items-center justify-center text-sage-600 text-sm">
+              Belum ada foto 2
+            </div>
+          )}
         </div>
       </section>
 
@@ -188,7 +246,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 5. BERITA & PENGUMUMAN (Tarik dari Sanity) */}
+      {/* 5. BERITA & PENGUMUMAN */}
       <section className="bg-sage-100 py-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-end mb-12">
@@ -240,7 +298,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 6. GALERI & PETA DESA */}
+      {/* 6. GALERI & PETA DESA (Dinamis dari Sanity) */}
       <section className="py-24 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12">
         {/* Galeri Singkat */}
         <div>
@@ -253,13 +311,25 @@ export default async function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {/* 4 Kotak Placeholder Gambar */}
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="aspect-square bg-sage-200 rounded-xl hover:opacity-80 cursor-pointer transition-opacity"
-              ></div>
-            ))}
+            {galeriData.length > 0
+              ? galeriData.map((item) => (
+                  <div
+                    key={item._id}
+                    className="relative aspect-square rounded-xl overflow-hidden group"
+                  >
+                    <img
+                      src={item.gambarUrl}
+                      alt={item.judul || "Galeri Desa"}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                ))
+              : [1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="aspect-square bg-sage-200 rounded-xl"
+                  ></div>
+                ))}
           </div>
         </div>
 
@@ -268,9 +338,8 @@ export default async function Home() {
           <h2 className="font-display text-2xl font-bold text-sage-900 mb-8">
             Lokasi Kami
           </h2>
-          <div className="w-full h-[400px] bg-sage-200 rounded-2xl overflow-hidden border border-sage-300 flex items-center justify-center">
-            {/* Nantinya di sini diisi iframe Google Maps */}
-            <p className="text-sage-600 font-medium flex flex-col items-center gap-2">
+          <div className="w-full h-[400px] bg-sage-200 rounded-2xl overflow-hidden border border-sage-300 flex items-center justify-center relative">
+            <p className="text-sage-600 font-medium flex flex-col items-center gap-2 z-10">
               <MapPin className="h-8 w-8 text-sage-500" />
               Embed Google Maps Desa Kadungrejo
             </p>
