@@ -2,43 +2,44 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'berita',
-  title: 'Berita Desa',
+  title: 'Berita',
   type: 'document',
   fields: [
     defineField({
       name: 'judul',
       title: 'Judul Berita',
       type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'slug',
-      title: 'URL Slug',
-      type: 'slug',
-      options: {
-        source: 'judul',
-        maxLength: 96,
-      },
     }),
     defineField({
       name: 'tanggal',
-      title: 'Tanggal Publikasi',
-      type: 'datetime',
-      initialValue: () => new Date().toISOString(),
+      title: 'Tanggal',
+      type: 'date',
     }),
     defineField({
-      name: 'gambarCover',
-      title: 'Gambar Cover',
+      name: 'penulis',
+      title: 'Penulis',
+      type: 'string',
+      initialValue: 'Administrator', // Default otomatis diisi Administrator
+    }),
+    defineField({
+      name: 'dilihat',
+      title: 'Jumlah Dilihat (Simulasi)',
+      type: 'number',
+      initialValue: 0,
+      description:
+        'Untuk sementara, angka ini bisa diisi manual. (Penghitung otomatis butuh integrasi API khusus).',
+    }),
+    defineField({
+      name: 'gambar',
+      title: 'Gambar Thumbnail/Cover',
       type: 'image',
-      options: {
-        hotspot: true, // Memungkinkan admin memotong (crop) gambar di dashboard
-      },
+      options: {hotspot: true},
     }),
     defineField({
       name: 'konten',
-      title: 'Isi Berita',
+      title: 'Konten Berita',
       type: 'array',
-      of: [{type: 'block'}], // Ini adalah format Rich Text bawaan Sanity
+      of: [{type: 'block'}],
     }),
   ],
 })
