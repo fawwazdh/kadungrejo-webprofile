@@ -1,5 +1,7 @@
 import { Award, UserCircle } from "lucide-react";
 import { client } from "@/lib/sanity";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Struktur Pemerintahan" };
 
 // --- Tipe Data ---
 interface Perangkat {

@@ -20,10 +20,12 @@ interface BerandaData {
   tentangImage2Url: string;
 }
 
+// PERBAIKAN 1: Menambahkan 'slug' pada interface Berita
 interface Berita {
   _id: string;
   judul: string;
   tanggal: string;
+  slug: string;
   gambarUrl?: string;
 }
 
@@ -64,8 +66,10 @@ export default async function Home() {
     "tentangImage1Url": tentangImage1.asset->url, "tentangImage2Url": tentangImage2.asset->url 
   }`;
 
+  // PERBAIKAN 2: Memperbaiki penulisan query "_slug" menjadi "_id, "slug": slug.current"
   const beritaQuery =
-    '*[_type == "berita"] | order(tanggal desc)[0...3] { _id, judul, tanggal, "gambarUrl": gambar.asset->url }';
+    '*[_type == "berita"] | order(tanggal desc)[0...3] { _id, "slug": slug.current, judul, tanggal, "gambarUrl": gambar.asset->url }';
+
   const galeriQuery =
     '*[_type == "galeri"] | order(_createdAt desc)[0...4] { _id, judul, "gambarUrl": gambar.asset->url }';
 
@@ -73,12 +77,24 @@ export default async function Home() {
   const potensiQuery =
     '*[_type == "potensi"] | order(_createdAt asc) { _id, judul, deskripsi, "gambarUrl": gambar.asset->url }';
 
-  const [beranda, beritaTerbaru, galeriData, potensiData] = await Promise.all([
-    client.fetch<BerandaData>(berandaQuery),
-    client.fetch<Berita[]>(beritaQuery),
-    client.fetch<Galeri[]>(galeriQuery),
-    client.fetch<Potensi[]>(potensiQuery), // Menarik data potensi
-  ]);
+  let beranda: BerandaData | null = null;
+  let beritaTerbaru: Berita[] = [];
+  let galeriData: Galeri[] = [];
+  let potensiData: Potensi[] = [];
+
+  try {
+    [beranda, beritaTerbaru, galeriData, potensiData] = await Promise.all([
+      client.fetch<BerandaData>(berandaQuery),
+      client.fetch<Berita[]>(beritaQuery),
+      client.fetch<Galeri[]>(galeriQuery),
+      client.fetch<Potensi[]>(potensiQuery),
+    ]);
+  } catch (error) {
+    console.error(
+      "Gagal mengambil data dari Sanity (Koneksi Timeout/Offline):",
+      error,
+    );
+  }
 
   return (
     <>
@@ -148,8 +164,9 @@ export default async function Home() {
               </p>
             ) : (
               beritaTerbaru.map((item) => (
+                /* PERBAIKAN 3: Mengubah item._id menjadi item.slug */
                 <Link
-                  href={`/berita/${item._id}`}
+                  href={`/berita/${item.slug || item._id}`}
                   key={item._id}
                   className="block group"
                 >

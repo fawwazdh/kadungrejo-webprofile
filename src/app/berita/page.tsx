@@ -1,17 +1,32 @@
 import Link from "next/link";
 import { CalendarDays, Newspaper, ArrowRight } from "lucide-react";
 import { client } from "@/lib/sanity";
+import type { Metadata } from "next";
+
+// 1. TAMBAHKAN METADATA STATIS UNTUK HALAMAN INDEKS BERITA
+export const metadata: Metadata = {
+  title: "Berita & Pengumuman | Desa Kadungrejo",
+  description:
+    "Kabar terkini, pengumuman resmi, dan agenda kegiatan terbaru dari Pemerintah Desa Kadungrejo.",
+  openGraph: {
+    title: "Berita & Pengumuman | Desa Kadungrejo",
+    description: "Kabar terkini dan informasi penting seputar Desa Kadungrejo.",
+    type: "website",
+  },
+};
 
 interface Berita {
   _id: string;
   judul: string;
   tanggal: string;
-  gambarUrl?: string; // Ditambahkan
+  slug: string; // Ditambahkan tipe slug
+  gambarUrl?: string;
 }
 
 export default async function BeritaPage() {
+  // 2. QUERY DIPERBARUI: Mengambil "slug": slug.current
   const query =
-    '*[_type == "berita"] | order(tanggal desc) { _id, judul, tanggal, "gambarUrl": gambar.asset->url }';
+    '*[_type == "berita"] | order(tanggal desc) { _id, judul, tanggal, "slug": slug.current, "gambarUrl": gambar.asset->url }';
   const daftarBerita = await client.fetch<Berita[]>(query);
 
   return (
@@ -38,8 +53,9 @@ export default async function BeritaPage() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {daftarBerita.map((item) => (
+              /* 3. LINK DIPERBARUI: Menggunakan item.slug, bukan item._id */
               <Link
-                href={`/berita/${item._id}`}
+                href={`/berita/${item.slug || item._id}`}
                 key={item._id}
                 className="group flex"
               >

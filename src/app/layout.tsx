@@ -7,9 +7,45 @@ import { MapPin, Phone, Mail, Search } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// =========================================================================
+// OPTIMASI SEO GLOBAL (Template Judul, Keywords, & OpenGraph)
+// =========================================================================
 export const metadata: Metadata = {
-  title: "Website Desa Kadungrejo",
-  description: "Portal Resmi Pemerintah Desa Kadungrejo",
+  // metadataBase wajib ada agar sistem preview gambar/link di WA & Google bekerja sempurna
+  metadataBase: new URL("https://kadungrejo.desa.id"), // Nanti bisa diganti dengan domain asli desa saat online
+  title: {
+    default: "Desa Kadungrejo - Kec. Baureno, Kab. Bojonegoro",
+    template: "%s | Desa Kadungrejo", // %s akan otomatis diganti nama halaman (misal: "Profil | Desa Kadungrejo")
+  },
+  description:
+    "Portal resmi Pemerintah Desa Kadungrejo, Kecamatan Baureno, Kabupaten Bojonegoro, Jawa Timur. Mewujudkan pemerintahan yang transparan, akuntabel, inovatif, dan melayani masyarakat.",
+  keywords: [
+    "Desa Kadungrejo",
+    "Kadungrejo",
+    "Baureno",
+    "Bojonegoro",
+    "Jawa Timur",
+    "Website Desa",
+    "Portal Desa",
+    "Pemerintahan Desa",
+    "Layanan Warga",
+  ],
+  authors: [{ name: "Pemerintah Desa Kadungrejo" }],
+  openGraph: {
+    title: "Desa Kadungrejo - Kec. Baureno, Kab. Bojonegoro",
+    description:
+      "Portal resmi Pemerintah Desa Kadungrejo. Pusat informasi, layanan publik, berita terbaru, dan potensi desa.",
+    url: "https://kadungrejo.desa.id",
+    siteName: "Portal Resmi Desa Kadungrejo",
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Desa Kadungrejo - Kec. Baureno, Kab. Bojonegoro",
+    description:
+      "Portal resmi Pemerintah Desa Kadungrejo, Kecamatan Baureno, Kabupaten Bojonegoro.",
+  },
 };
 
 interface Pengaturan {
@@ -28,10 +64,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Tarik data pengaturan umum dari Sanity
-  const query =
-    '*[_type == "pengaturanUmum"][0] { ..., "logoUrl": logo.asset->url }';
-  const pengaturan = await client.fetch<Pengaturan>(query);
+  // PENGAMAN: Gunakan try...catch agar web tidak crash saat offline/error
+  let pengaturan: Pengaturan | null = null;
+
+  try {
+    const query =
+      '*[_type == "pengaturanUmum"][0] { ..., "logoUrl": logo.asset->url }';
+    pengaturan = await client.fetch<Pengaturan>(query);
+  } catch (error) {
+    console.error(
+      "Gagal mengambil data pengaturan dari Sanity (Cek koneksi internet):",
+      error
+    );
+    // Web akan otomatis menggunakan teks fallback (Desa Kadungrejo) di bawah
+  }
 
   const navLinks = [
     { name: "Beranda", href: "/" },

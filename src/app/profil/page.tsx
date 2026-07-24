@@ -1,5 +1,10 @@
 import { Target, Lightbulb, Map, Users, History, TreePine } from "lucide-react";
 import { client } from "@/lib/sanity";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profil & Sejarah",
+};
 
 // --- Tipe Data ---
 interface ProfilData {

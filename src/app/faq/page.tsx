@@ -1,5 +1,7 @@
 import { MessageCircleQuestion } from "lucide-react";
 import { client } from "@/lib/sanity";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Tanya Jawab (FAQ)" };
 
 interface FAQ {
   _id: string;

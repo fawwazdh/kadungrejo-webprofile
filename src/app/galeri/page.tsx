@@ -1,5 +1,7 @@
 import { Camera, Image as ImageIcon } from "lucide-react";
 import { client } from "@/lib/sanity";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Galeri Kegiatan" };
 
 // --- Tipe Data ---
 interface Galeri {

@@ -9,6 +9,21 @@ export default defineType({
       name: 'judul',
       title: 'Judul Berita',
       type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    // ==========================================
+    // KOLOM BARU: SLUG (URL SEO-FRIENDLY)
+    // ==========================================
+    defineField({
+      name: 'slug',
+      title: 'Slug (URL Berita)',
+      type: 'slug',
+      description: 'Klik tombol "Generate" untuk membuat URL otomatis dari Judul Berita.',
+      options: {
+        source: 'judul',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'tanggal',
