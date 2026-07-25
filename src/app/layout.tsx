@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { client } from "@/lib/sanity";
-import { MapPin, Phone, Mail, Search } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
+// 1. IMPORT NAVBAR SUDAH ADA
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,11 +13,10 @@ const inter = Inter({ subsets: ["latin"] });
 // OPTIMASI SEO GLOBAL (Template Judul, Keywords, & OpenGraph)
 // =========================================================================
 export const metadata: Metadata = {
-  // metadataBase wajib ada agar sistem preview gambar/link di WA & Google bekerja sempurna
-  metadataBase: new URL("https://kadungrejo.desa.id"), // Nanti bisa diganti dengan domain asli desa saat online
+  metadataBase: new URL("https://kadungrejo.desa.id"),
   title: {
     default: "Desa Kadungrejo - Kec. Baureno, Kab. Bojonegoro",
-    template: "%s | Desa Kadungrejo", // %s akan otomatis diganti nama halaman (misal: "Profil | Desa Kadungrejo")
+    template: "%s | Desa Kadungrejo",
   },
   description:
     "Portal resmi Pemerintah Desa Kadungrejo, Kecamatan Baureno, Kabupaten Bojonegoro, Jawa Timur. Mewujudkan pemerintahan yang transparan, akuntabel, inovatif, dan melayani masyarakat.",
@@ -64,7 +65,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // PENGAMAN: Gunakan try...catch agar web tidak crash saat offline/error
   let pengaturan: Pengaturan | null = null;
 
   try {
@@ -74,9 +74,8 @@ export default async function RootLayout({
   } catch (error) {
     console.error(
       "Gagal mengambil data pengaturan dari Sanity (Cek koneksi internet):",
-      error
+      error,
     );
-    // Web akan otomatis menggunakan teks fallback (Desa Kadungrejo) di bawah
   }
 
   const navLinks = [
@@ -92,50 +91,8 @@ export default async function RootLayout({
   return (
     <html lang="id">
       <body className={inter.className}>
-        {/* NAVBAR */}
-        <header className="sticky top-0 z-50 bg-[#e8efe9] border-b border-sage-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            {/* Logo & Nama Desa Dinamis */}
-            <Link href="/" className="flex items-center gap-4 group">
-              {pengaturan?.logoUrl ? (
-                <img
-                  src={pengaturan.logoUrl}
-                  alt="Logo"
-                  className="h-12 w-auto object-contain"
-                />
-              ) : (
-                <div className="bg-sage-800 text-white p-2.5 rounded-xl">
-                  <MapPin className="h-7 w-7" />
-                </div>
-              )}
-              <div className="flex flex-col">
-                <h1 className="font-display font-extrabold text-xl md:text-2xl text-sage-900 group-hover:text-sage-700 transition-colors">
-                  Desa {pengaturan?.namaDesa || "Kadungrejo"}
-                </h1>
-                <p className="text-xs md:text-sm font-medium text-sage-600">
-                  Kec. {pengaturan?.kecamatan || "Baureno"}, Kab.{" "}
-                  {pengaturan?.kabupaten || "Bojonegoro"}
-                </p>
-              </div>
-            </Link>
-
-            {/* Menu Links */}
-            <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-sage-800">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="hover:text-gold-600 transition-colors"
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <button className="text-sage-700 hover:text-sage-900">
-                <Search className="h-5 w-5" />
-              </button>
-            </nav>
-          </div>
-        </header>
+        {/* 2. TAG <header> LAMA DIHAPUS DAN DIGANTI DENGAN INI: */}
+        <Navbar pengaturan={pengaturan} />
 
         {/* KONTEN UTAMA */}
         <main className="min-h-screen">{children}</main>
