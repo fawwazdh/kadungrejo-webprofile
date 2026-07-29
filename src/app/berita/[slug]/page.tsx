@@ -224,7 +224,7 @@ export default async function HalamanDetailBerita({ params }: Props) {
 
                 {/* Tombol WhatsApp */}
                 <a
-                  href={`https://wa.me/?text=${encodeURIComponent(berita.judul)}%20%0Ahttps://kadungrejo.desa.id/berita/${berita.slug}`}
+                  href={`https://wa.me/?text=${encodeURIComponent(berita.judul)}%20%0Ahttps://kadungrejo.desa.id/berita/${slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3 bg-green-500 text-white rounded-full hover:scale-110 transition-transform shadow-md"
@@ -241,7 +241,7 @@ export default async function HalamanDetailBerita({ params }: Props) {
 
                 {/* Tombol Facebook */}
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=https://kadungrejo.desa.id/berita/${berita.slug}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://kadungrejo.desa.id/berita/${slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3 bg-blue-600 text-white rounded-full hover:scale-110 transition-transform shadow-md"
@@ -258,7 +258,7 @@ export default async function HalamanDetailBerita({ params }: Props) {
 
                 {/* Tombol Twitter/X */}
                 <a
-                  href={`https://twitter.com/intent/tweet?url=https://kadungrejo.desa.id/berita/${berita.slug}&text=${encodeURIComponent(berita.judul)}`}
+                  href={`https://twitter.com/intent/tweet?url=https://kadungrejo.desa.id/berita/${slug}&text=${encodeURIComponent(berita.judul)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-3 bg-black text-white rounded-full hover:scale-110 transition-transform shadow-md"
