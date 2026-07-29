@@ -54,7 +54,34 @@ export default defineType({
       name: 'konten',
       title: 'Konten Berita',
       type: 'array',
-      of: [{type: 'block'}],
+      of: [
+        {
+          type: 'block',
+          styles: [
+            {title: 'Normal (Paragraf)', value: 'normal'},
+            {title: 'Heading 2 (Sub-Judul Besar)', value: 'h2'},
+            {title: 'Heading 3 (Sub-Judul Kecil)', value: 'h3'},
+            {title: 'Kutipan (Quote)', value: 'blockquote'},
+          ],
+          lists: [
+            {title: 'Bullet (Titik)', value: 'bullet'},
+            {title: 'Number (Angka)', value: 'number'},
+          ],
+        },
+        // Ini fitur agar CMS bisa upload foto di tengah paragraf berita
+        {
+          type: 'image',
+          options: {hotspot: true},
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Teks Alternatif (Alt)',
+              description: 'Tulis penjelasan singkat gambar ini (Penting untuk SEO).',
+            },
+          ],
+        },
+      ],
     }),
   ],
 })

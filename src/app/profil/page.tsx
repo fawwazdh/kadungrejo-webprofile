@@ -134,22 +134,22 @@ export default async function ProfilPage() {
             <h3 className="font-display text-2xl font-bold text-white mb-6 flex items-center gap-3">
               <TreePine className="h-6 w-6 text-gold-400" /> Geografis
             </h3>
-            <ul className="space-y-3 text-sage-200">
-              <li className="flex justify-between border-b border-sage-700 pb-2">
-                <span>Luas Wilayah</span>{" "}
-                <span className="font-semibold text-white">
+            <ul className="space-y-5 text-sage-200 mt-4">
+              <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-sage-700 pb-4">
+                <span className="opacity-80">Luas Wilayah</span>
+                <span className="font-semibold text-white text-lg">
                   {data?.luasWilayah || "450 Hektar"}
                 </span>
               </li>
-              <li className="flex justify-between border-b border-sage-700 pb-2">
-                <span>Topografi</span>{" "}
-                <span className="font-semibold text-white">
+              <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-sage-700 pb-4">
+                <span className="opacity-80">Topografi</span>
+                <span className="font-semibold text-white text-lg">
                   {data?.topografi || "Dataran Rendah"}
                 </span>
               </li>
-              <li className="flex justify-between pb-2">
-                <span>Ketinggian</span>{" "}
-                <span className="font-semibold text-white">
+              <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 pb-2">
+                <span className="opacity-80">Ketinggian</span>
+                <span className="font-semibold text-white text-lg">
                   {data?.ketinggian || "15 mdpl"}
                 </span>
               </li>
@@ -163,22 +163,22 @@ export default async function ProfilPage() {
             <h3 className="font-display text-2xl font-bold text-sage-900 mb-6 flex items-center gap-3">
               <Users className="h-6 w-6 text-sage-700" /> Demografi
             </h3>
-            <ul className="space-y-3 text-sage-700">
-              <li className="flex justify-between border-b border-sage-200 pb-2">
-                <span>Total Penduduk</span>{" "}
-                <span className="font-bold text-sage-900">
+            <ul className="space-y-5 text-sage-700 mt-4">
+              <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-sage-200 pb-4">
+                <span className="opacity-80">Total Penduduk</span>
+                <span className="font-extrabold text-sage-900 text-lg">
                   {data?.totalPenduduk || "± 4.500 Jiwa"}
                 </span>
               </li>
-              <li className="flex justify-between border-b border-sage-200 pb-2">
-                <span>Kepala Keluarga</span>{" "}
-                <span className="font-bold text-sage-900">
+              <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-sage-200 pb-4">
+                <span className="opacity-80">Kepala Keluarga</span>
+                <span className="font-extrabold text-sage-900 text-lg">
                   {data?.jumlahKk || "1.250 KK"}
                 </span>
               </li>
-              <li className="flex justify-between pb-2">
-                <span>Mata Pencaharian</span>{" "}
-                <span className="font-bold text-sage-900">
+              <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 pb-2">
+                <span className="opacity-80">Mata Pencaharian</span>
+                <span className="font-extrabold text-sage-900 text-lg">
                   {data?.mataPencaharian || "Petani"}
                 </span>
               </li>

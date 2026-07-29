@@ -18,6 +18,7 @@ export default function Navbar({ pengaturan }: { pengaturan?: Pengaturan | null 
   const navLinks = [
     { name: "Beranda", href: "/" },
     { name: "Berita & Kabar", href: "/berita" },
+    { name: "Pemerintahan", href: "/pemerintahan" },
     { name: "Profil Desa", href: "/profil" },
     { name: "Galeri", href: "/galeri" },
     { name: "FAQ", href: "/faq" },

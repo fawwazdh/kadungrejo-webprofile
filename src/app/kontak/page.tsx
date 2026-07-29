@@ -98,61 +98,35 @@ export default function KontakPage() {
           </div>
 
           {/* Kolom Kanan: Form Kirim Pesan */}
-          <div className="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-sage-200">
-            <h2 className="font-display text-2xl font-bold text-sage-900 mb-6">
-              Kirim Pesan
-            </h2>
-            <form className="space-y-6">
-              <div>
-                <label
-                  htmlFor="nama"
-                  className="block text-sm font-semibold text-sage-900 mb-2"
-                >
-                  Nama Lengkap
-                </label>
-                <input
-                  type="text"
-                  id="nama"
-                  placeholder="Masukkan nama Anda"
-                  className="w-full px-4 py-3 rounded-xl bg-sage-50 border border-sage-200 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="kontak"
-                  className="block text-sm font-semibold text-sage-900 mb-2"
-                >
-                  Email / No. HP
-                </label>
-                <input
-                  type="text"
-                  id="kontak"
-                  placeholder="Untuk balasan pesan"
-                  className="w-full px-4 py-3 rounded-xl bg-sage-50 border border-sage-200 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="pesan"
-                  className="block text-sm font-semibold text-sage-900 mb-2"
-                >
-                  Pesan Anda
-                </label>
-                <textarea
-                  id="pesan"
-                  rows={5}
-                  placeholder="Tuliskan pertanyaan atau masukan Anda di sini..."
-                  className="w-full px-4 py-3 rounded-xl bg-sage-50 border border-sage-200 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all resize-none"
-                ></textarea>
-              </div>
-              <button
-                type="button"
-                className="w-full bg-sage-800 hover:bg-sage-900 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md"
+          <div className="bg-white p-8 rounded-2xl border border-sage-200 shadow-lg text-center">
+            <h3 className="text-2xl font-bold text-sage-900 mb-4">
+              Butuh Bantuan Cepat?
+            </h3>
+            <p className="text-sage-600 mb-8">
+              Silakan hubungi admin pelayanan desa kami secara langsung melalui
+              WhatsApp untuk respon yang lebih cepat.
+            </p>
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20Admin%20Desa%20Kadungrejo,%20saya%20ingin%20bertanya..."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl transition-all shadow-md"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <Send className="h-5 w-5" />
-                Kirim Pesan Sekarang
-              </button>
-            </form>
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              Hubungi via WhatsApp
+            </a>
           </div>
         </div>
       </section>
