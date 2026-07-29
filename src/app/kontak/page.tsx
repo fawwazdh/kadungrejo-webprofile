@@ -2,6 +2,8 @@ import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Hubungi Kami" };
 
+export const revalidate = 10;
+
 export default function KontakPage() {
   return (
     <div className="pb-24 bg-sage-50 min-h-screen">

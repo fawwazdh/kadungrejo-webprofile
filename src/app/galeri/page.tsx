@@ -3,6 +3,8 @@ import { client } from "@/lib/sanity";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Galeri Kegiatan" };
 
+export const revalidate = 10;
+
 // --- Tipe Data ---
 interface Galeri {
   _id: string;

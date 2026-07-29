@@ -3,6 +3,7 @@ import { CalendarDays, Newspaper, ArrowRight } from "lucide-react";
 import { client } from "@/lib/sanity";
 import type { Metadata } from "next";
 
+export const revalidate = 10;
 // 1. TAMBAHKAN METADATA STATIS UNTUK HALAMAN INDEKS BERITA
 export const metadata: Metadata = {
   title: "Berita & Pengumuman | Desa Kadungrejo",

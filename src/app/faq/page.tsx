@@ -3,6 +3,8 @@ import { client } from "@/lib/sanity";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Tanya Jawab (FAQ)" };
 
+export const revalidate = 10;
+
 interface FAQ {
   _id: string;
   pertanyaan: string;

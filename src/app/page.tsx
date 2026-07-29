@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { client } from "@/lib/sanity";
 
+export const revalidate = 10;
+
 // --- Tipe Data ---
 interface BerandaData {
   heroTitle: string;
