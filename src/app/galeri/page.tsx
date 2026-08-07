@@ -1,83 +1,100 @@
-import { Camera, Image as ImageIcon } from "lucide-react";
+import { Camera, CalendarDays } from "lucide-react";
 import { client } from "@/lib/sanity";
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Galeri Kegiatan" };
+import PageHeader from "@/components/PageHeader";
 
 export const revalidate = 10;
 
-// --- Tipe Data ---
-interface Galeri {
+export const metadata: Metadata = {
+  title: "Galeri Desa",
+};
+
+// --- Tipe Data (Ditambah property caption) ---
+interface GaleriItem {
   _id: string;
   judul: string;
-  gambarUrl: string | null;
+  gambarUrl: string;
+  caption: string | null;
+  tanggal: string | null;
 }
 
 export default async function GaleriPage() {
-  // Menarik semua foto dari Sanity, diurutkan dari yang paling baru di-upload
+  // 1. Tarik data galeri aslimu
   const query =
-    '*[_type == "galeri"] | order(_createdAt desc) { _id, judul, "gambarUrl": gambar.asset->url }';
-  const fotoGaleri = await client.fetch<Galeri[]>(query);
+    '*[_type == "galeri"] | order(_createdAt desc) { _id, judul, "gambarUrl": gambar.asset->url, caption, tanggal }';
+  const galeriData = await client.fetch<GaleriItem[]>(query);
+
+  // 2. Tarik foto background galeri
+  const bgQuery =
+    '*[_type == "pengaturanUmum"][0] { "url": bgGaleri.asset->url }';
+  const bgData = await client.fetch<{ url: string | null }>(bgQuery);
+  const bgImage = bgData?.url;
 
   return (
     <div className="pb-24 bg-sage-50 min-h-screen">
-      {/* Header Halaman */}
-      <section className="bg-sage-900 text-sage-50 py-20 text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <Camera className="h-12 w-12 text-gold-500 mx-auto mb-6 opacity-80" />
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-4 text-white drop-shadow-md">
-            Galeri Desa
-          </h1>
-          <p className="text-lg text-sage-200 max-w-2xl mx-auto">
-            Kumpulan momen, kegiatan, dan keindahan alam yang terekam di Desa
-            Kadungrejo.
-          </p>
-        </div>
-      </section>
+      {/* 3. KOMPONEN HEADER BARU */}
+      <PageHeader
+        badge="Dokumentasi Visual"
+        badgeIcon={<Camera className="h-5 w-5" />}
+        title="Galeri Kegiatan"
+        description="Dokumentasi berbagai momen, pembangunan, dan kegiatan kemasyarakatan di lingkungan Desa Kadungrejo."
+        bgImage={bgImage}
+      />
 
-      {/* Grid Foto Galeri */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {fotoGaleri.length === 0 ? (
-          <div className="text-center bg-white p-16 rounded-3xl border border-sage-200 shadow-sm max-w-2xl mx-auto">
-            <ImageIcon className="h-16 w-16 text-sage-300 mx-auto mb-4" />
-            <h2 className="text-2xl font-display font-bold text-sage-900 mb-2">
-              Album Masih Kosong
-            </h2>
-            <p className="text-sage-600">
-              Belum ada foto yang diunggah ke galeri melalui dashboard admin.
+      {/* Grid Galeri */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {galeriData.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-3xl border border-sage-200 shadow-sm">
+            <Camera className="h-16 w-16 text-sage-300 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-sage-900 mb-2">
+              Belum Ada Foto
+            </h3>
+            <p className="text-sage-500">
+              Dokumentasi kegiatan akan segera diperbarui.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {fotoGaleri.map((item) => (
-              <div
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {galeriData.map((item) => (
+              // Menggunakan tag <figure> untuk memisahkan foto dan caption
+              <figure
                 key={item._id}
-                className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-sage-200 cursor-pointer shadow-sm border border-sage-200 hover:shadow-xl transition-all duration-300"
+                className="bg-white rounded-[2rem] overflow-hidden shadow-lg border border-sage-200 hover:border-gold-400 hover:-translate-y-1.5 transition-all duration-300 flex flex-col group"
               >
-                {item.gambarUrl ? (
-                  <>
-                    {/* Gambar utama dengan efek zoom saat di-hover */}
-                    <img
-                      src={item.gambarUrl}
-                      alt={item.judul || "Foto Galeri Desa"}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                    />
-
-                    {/* Overlay gradien gelap di bagian bawah agar teks mudah dibaca */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-sage-900/90 via-sage-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                    {/* Teks Judul Foto yang muncul dari bawah saat di-hover */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <h3 className="text-white font-display font-bold text-lg leading-tight drop-shadow-md">
-                        {item.judul || "Tanpa Judul"}
-                      </h3>
+                {/* Bagian Foto */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-sage-200 shrink-0">
+                  <img
+                    src={item.gambarUrl}
+                    alt={item.judul}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  />
+                  {/* Badge Tanggal (Jika ada) */}
+                  {item.tanggal && (
+                    <div className="absolute top-4 left-4 bg-sage-900/80 backdrop-blur-md text-white text-xs font-bold px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
+                      <CalendarDays className="h-3.5 w-3.5 text-gold-400" />
+                      {new Date(item.tanggal).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </div>
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="h-10 w-10 text-sage-400" />
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+
+                {/* Bagian Keterangan / Caption */}
+                <figcaption className="p-6 sm:p-8 flex flex-col flex-grow bg-white">
+                  <h3 className="font-display text-xl font-bold text-sage-950 mb-3 leading-snug">
+                    {item.judul}
+                  </h3>
+
+                  {/* Render Caption hanya jika Admin mengisinya di CMS. Format RATA KIRI-KANAN (text-justify) */}
+                  {item.caption && (
+                    <p className="text-sage-700 text-sm sm:text-base font-medium leading-relaxed text-justify">
+                      {item.caption}
+                    </p>
+                  )}
+                </figcaption>
+              </figure>
             ))}
           </div>
         )}

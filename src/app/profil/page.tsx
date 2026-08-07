@@ -1,6 +1,7 @@
-import { Target, Lightbulb, Map, Users, History, TreePine } from "lucide-react";
+import { Target, Lightbulb, Map, Users, History, TreePine, Leaf } from "lucide-react";
 import { client } from "@/lib/sanity";
 import type { Metadata } from "next";
+import PageHeader from "@/components/PageHeader";
 
 export const revalidate = 10;
 
@@ -22,33 +23,33 @@ interface ProfilData {
 }
 
 export default async function ProfilPage() {
-  // Tarik data profil (ambil dokumen pertama index ke-[0])
+  // 1. Tarik data profil (Seperti kode aslimu)
   const query = '*[_type == "profil"][0]';
   const data = await client.fetch<ProfilData>(query);
 
-  // Data Default (jika CMS masih kosong/belum di-publish)
+  // 2. Tarik HANYA foto background profil dari Pengaturan Umum
+  const bgQuery =
+    '*[_type == "pengaturanUmum"][0] { "url": bgProfil.asset->url }';
+  const bgData = await client.fetch<{ url: string | null }>(bgQuery);
+  const bgImage = bgData?.url;
+
   const defaultMisi = [
     "Meningkatkan kualitas pelayanan publik berbasis digital yang cepat dan transparan.",
     "Memberdayakan ekonomi kerakyatan melalui pengembangan UMKM dan BUMDes.",
     "Membangun dan memelihara infrastruktur desa yang merata dan berkelanjutan.",
   ];
-
   const misiList = data?.misi && data.misi.length > 0 ? data.misi : defaultMisi;
 
   return (
     <div className="pb-24">
-      {/* 1. Header Profil */}
-      <section className="bg-sage-900 text-sage-50 py-20 text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-md">
-            Profil Desa Kadungrejo
-          </h1>
-          <p className="text-lg text-sage-200">
-            Mengenal lebih dekat sejarah, visi, misi, dan potensi yang membangun
-            fondasi kehidupan warga Desa Kadungrejo.
-          </p>
-        </div>
-      </section>
+      {/* 3. KOMPONEN HEADER BARU */}
+      <PageHeader
+        badge="Profil Singkat"
+        badgeIcon={<Leaf className="h-5 w-5" />}
+        title="Profil Desa Kadungrejo"
+        description="Mengenal lebih dekat sejarah, visi, misi, dan potensi yang membangun fondasi kehidupan warga Desa Kadungrejo secara transparan dan terpadu."
+        bgImage={bgImage}
+      />
 
       {/* 2. Sejarah Desa */}
       <section className="py-20 max-w-5xl mx-auto px-6">
@@ -62,7 +63,7 @@ export default async function ProfilPage() {
             <h2 className="font-display text-3xl font-bold text-sage-900 mb-6">
               Sejarah Desa
             </h2>
-            <div className="text-sage-700 space-y-4 leading-relaxed whitespace-pre-wrap">
+            <div className="text-sage-700 space-y-4 leading-relaxed whitespace-pre-wrap text-justify">
               {data?.sejarah ||
                 "Sejarah desa belum ditambahkan di sistem. Silakan isi melalui dashboard admin."}
             </div>
@@ -72,7 +73,7 @@ export default async function ProfilPage() {
 
       {/* 3. Visi & Misi */}
       <section className="bg-sage-100 py-20">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-6 text-justify">
           <div className="text-center mb-16">
             <h2 className="font-display text-3xl font-bold text-sage-900">
               Visi & Misi
@@ -128,7 +129,7 @@ export default async function ProfilPage() {
 
       {/* 4. Kondisi Geografis & Demografi */}
       <section className="py-20 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10">
-        <div className="bg-sage-800 p-10 rounded-3xl text-sage-50 relative overflow-hidden group">
+        <div className="bg-sage-800 p-10 rounded-3xl text-sage-50 relative overflow-hidden group text-justify">
           <Map className="absolute -bottom-10 -right-10 h-64 w-64 text-sage-700 opacity-50 group-hover:scale-110 transition-transform duration-500" />
           <div className="relative z-10">
             <h3 className="font-display text-2xl font-bold text-white mb-6 flex items-center gap-3">
@@ -157,7 +158,7 @@ export default async function ProfilPage() {
           </div>
         </div>
 
-        <div className="bg-sage-50 p-10 rounded-3xl border border-sage-200 relative overflow-hidden group shadow-sm">
+        <div className="bg-sage-50 p-10 rounded-3xl border border-sage-200 relative overflow-hidden group shadow-sm text-justify">
           <Users className="absolute -bottom-10 -right-10 h-64 w-64 text-sage-200 opacity-50 group-hover:scale-110 transition-transform duration-500" />
           <div className="relative z-10">
             <h3 className="font-display text-2xl font-bold text-sage-900 mb-6 flex items-center gap-3">

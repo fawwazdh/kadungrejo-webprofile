@@ -190,25 +190,27 @@ export default async function HalamanDetailBerita({ params }: Props) {
                   components={{
                     types: {
                       image: ({ value }: any) => {
-                        // Logika aman mengambil URL gambar dari database Sanity tanpa library tambahan
                         if (!value?.asset?._ref) return null;
                         const ref = value.asset._ref;
                         const [_file, id, dimension, extension] =
                           ref.split("-");
                         const url = `https://cdn.sanity.io/images/${client.config().projectId}/${client.config().dataset}/${id}-${dimension}.${extension}`;
                         return (
-                          <div className="my-10 rounded-2xl overflow-hidden shadow-lg bg-sage-50 border border-sage-200">
+                          // Menggunakan tag <figure> dan <figcaption> sebagai standar caption berita
+                          <figure className="my-10 rounded-2xl overflow-hidden shadow-md bg-white border border-sage-200 flex flex-col">
                             <img
                               src={url}
-                              alt={value.alt || "Dokumentasi Berita"}
+                              alt={value.alt || "Dokumentasi Berita Kadungrejo"}
                               className="w-full h-auto object-cover"
                             />
-                            {value.alt && (
-                              <p className="text-center text-sm font-semibold text-sage-600 py-3 px-4 m-0">
-                                {value.alt}
-                              </p>
+
+                            {/* Jika admin mengisi caption, maka teks ini akan muncul di bawah foto */}
+                            {value.caption && (
+                              <figcaption className="text-center text-sm font-semibold text-sage-600 py-3 px-4 bg-sage-50 border-t border-sage-200">
+                                {value.caption}
+                              </figcaption>
                             )}
-                          </div>
+                          </figure>
                         );
                       },
                     },

@@ -59,7 +59,7 @@ export default defineType({
           type: 'block',
           styles: [
             {title: 'Normal (Paragraf)', value: 'normal'},
-            {title: 'Heading 2 (Sub-Judul Besar)', value: 'h2'},
+            {title: 'Heading 2 (Sub-Judul)', value: 'h2'},
             {title: 'Heading 3 (Sub-Judul Kecil)', value: 'h3'},
             {title: 'Kutipan (Quote)', value: 'blockquote'},
           ],
@@ -68,7 +68,7 @@ export default defineType({
             {title: 'Number (Angka)', value: 'number'},
           ],
         },
-        // Ini fitur agar CMS bisa upload foto di tengah paragraf berita
+        // Blok Gambar di tengah artikel dengan Caption
         {
           type: 'image',
           options: {hotspot: true},
@@ -76,8 +76,14 @@ export default defineType({
             {
               name: 'alt',
               type: 'string',
-              title: 'Teks Alternatif (Alt)',
-              description: 'Tulis penjelasan singkat gambar ini (Penting untuk SEO).',
+              title: 'Teks Alternatif (Alt SEO)',
+              description: 'Penjelasan singkat gambar untuk Google.',
+            },
+            {
+              name: 'caption',
+              type: 'string',
+              title: 'Keterangan Gambar (Caption)',
+              description: 'Teks ini akan muncul tepat di bawah gambar dalam artikel.',
             },
           ],
         },

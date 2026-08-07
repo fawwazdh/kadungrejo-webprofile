@@ -129,7 +129,7 @@ export default async function Home() {
               {beranda?.heroTitle || "Desa Kadungrejo"}
             </h1>
             {/* Font diperbesar ke text-lg sm:text-xl agar ramah lansia */}
-            <p className="text-lg sm:text-xl md:text-2xl text-sage-100 font-medium leading-relaxed max-w-2xl mb-8 drop-shadow">
+            <p className="text-lg sm:text-xl md:text-2xl text-sage-100 font-medium leading-relaxed max-w-2xl mb-8 drop-shadow text-justify">
               {beranda?.heroSubtitle ||
                 "Harmoni antara kearifan tradisi lokal dan inovasi pelayanan digital menuju masyarakat desa yang mandiri, transparan, dan sejahtera."}
             </p>
@@ -316,7 +316,7 @@ export default async function Home() {
                   {item.title}
                 </h3>
                 {/* Deskripsi kartu ramah lansia: text-base (16px), font-medium, warna gelap */}
-                <p className="text-sage-800 text-base font-medium leading-relaxed mb-6">
+                <p className="text-sage-800 text-base font-medium leading-relaxed mb-6 text-justify">
                   {item.desc}
                 </p>
               </div>
@@ -348,7 +348,7 @@ export default async function Home() {
                 Tumbuh Bersama Kearifan Lokal
               </h2>
               {/* Ukuran paragraf diperbesar ke text-lg */}
-              <p className="text-sage-800 font-medium leading-relaxed text-base sm:text-lg">
+              <p className="text-sage-800 font-medium leading-relaxed text-base sm:text-lg text-justify">
                 Desa Kadungrejo merupakan desa agraris yang menjunjung tinggi
                 nilai gotong royong. Dengan potensi alam yang melimpah dan
                 sumber daya manusia yang terus berkembang, kami berkomitmen
@@ -475,7 +475,7 @@ export default async function Home() {
                         {item.judul}
                       </h3>
                       {/* Deskripsi warna gelap pekat & line-clamp dihapus/diperbesar */}
-                      <p className="text-gray-700 text-base font-normal leading-relaxed">
+                      <p className="text-gray-700 text-base font-normal leading-relaxed text-justify">
                         {item.deskripsi}
                       </p>
                     </div>
